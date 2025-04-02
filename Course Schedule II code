@@ -1,0 +1,44 @@
+# Java Code
+
+class Solution {
+    public int[] findOrder(int nv, int[][] pre) {
+        Map<Integer, List<Integer>> g = new HashMap<>();
+        for(int i=0;i<nv;i++){
+            g.put(i, new ArrayList<>());
+        }
+
+        int ne = pre.length;
+        int[] indegree = new int[nv];
+        int[] e = new int[0];
+        for(int i=0; i<ne; i++){
+            int u =pre[i][1]; int v=pre[i][0];
+            g.get(u).add(v);//directed
+            indegree[v]++;
+        }
+
+        Queue<Integer> q = new LinkedList<>();
+        Set<Integer> visited = new HashSet<>();
+        for(int i=0; i<nv; i++){
+            if(indegree[i]==0){
+                q.add(i); visited.add(i);
+            }
+        }
+        List<Integer> a = new ArrayList<>();
+        while(!q.isEmpty()){
+            int u =q.remove();
+            a.add(u);
+            for(int v: g.get(u)){
+                if(!visited.contains(v)){
+                    indegree[v]--;
+                    if(indegree[v]==0){
+                        q.add(v); visited.add(v);
+                    }
+                }
+            }
+        }
+        if(a.size()<nv) return e;
+        int[] arr = new int[nv];
+        for(int i=0; i<nv; i++) arr[i]=a.get(i);
+        return arr;
+    }
+}
